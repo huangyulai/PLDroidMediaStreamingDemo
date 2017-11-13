@@ -50,9 +50,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class AVStreamingActivity extends StreamingBaseActivity implements
-        StreamingPreviewCallback,
-        CameraPreviewFrameView.Listener,
-        SurfaceTextureCallback {
+    StreamingPreviewCallback,
+    CameraPreviewFrameView.Listener,
+    SurfaceTextureCallback {
     private static final String TAG = "AVStreamingActivity";
 
     private CameraStreamingSetting mCameraStreamingSetting;
@@ -66,15 +66,12 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
     private Button mFaceBeautyBtn;
     private RotateLayout mRotateLayout;
 
-    private Button mMixToggleBtn;
-    private SeekBar mMixProgress;
 
     private boolean mIsTorchOn = false;
     private boolean mIsNeedMute = false;
     private boolean mIsNeedFB = false;
     private boolean mIsPreviewMirror = false;
     private boolean mIsEncodingMirror = false;
-    private boolean mIsPlayingback = false;
 
     private int mCurrentZoom = 0;
     private int mMaxZoom = 0;
@@ -89,8 +86,6 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
     private ImageSwitcher mImageSwitcher;
 
     private MediaStreamingManager mMediaStreamingManager;
-    private AudioMixer mAudioMixer;
-    private String mAudioFile;
 
     private Handler mHandler;
     private int mTimes = 0;
@@ -138,22 +133,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
     protected void initStreamingManager() {
         CameraPreviewFrameView cameraPreviewFrameView = (CameraPreviewFrameView) findViewById(R.id.cameraPreview_surfaceView);
         mMediaStreamingManager = new MediaStreamingManager(this, cameraPreviewFrameView, mEncodingConfig.mCodecType);
-        if (mEncodingConfig.mIsPictureStreamingEnabled) {
-            if (mEncodingConfig.mPictureStreamingFilePath == null) {
-                mProfile.setPictureStreamingResourceId(R.drawable.pause_publish);
-            } else {
-                mProfile.setPictureStreamingFilePath(mEncodingConfig.mPictureStreamingFilePath);
-            }
-        }
-        MicrophoneStreamingSetting microphoneStreamingSetting = null;
-        if (mAudioStereoEnable) {
-            /**
-             * Notice !!! {@link AudioFormat#CHANNEL_IN_STEREO} is NOT guaranteed to work on all devices.
-             */
-            microphoneStreamingSetting = new MicrophoneStreamingSetting();
-            microphoneStreamingSetting.setChannelConfig(AudioFormat.CHANNEL_IN_STEREO);
-        }
-        mMediaStreamingManager.prepare(mCameraStreamingSetting, microphoneStreamingSetting, buildWatermarkSetting(), mProfile);
+        mMediaStreamingManager.prepare(mCameraStreamingSetting, null, null, mProfile);
         if (mCameraConfig.mIsCustomFaceBeauty) {
             mMediaStreamingManager.setSurfaceTextureCallback(this);
         }
@@ -163,33 +143,6 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         mMediaStreamingManager.setAudioSourceCallback(this);
         mMediaStreamingManager.setStreamingStateListener(this);
 
-        mAudioMixer = mMediaStreamingManager.getAudioMixer();
-        mAudioMixer.setOnAudioMixListener(new OnAudioMixListener() {
-            @Override
-            public void onStatusChanged(MixStatus mixStatus) {
-                mMixToggleBtn.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(AVStreamingActivity.this, "mix finished", Toast.LENGTH_LONG).show();
-                        updateMixBtnText();
-                    }
-                });
-            }
-
-            @Override
-            public void onProgress(long l, long l1) {
-                mMixProgress.setProgress((int) l);
-                mMixProgress.setMax((int) l1);
-            }
-        });
-        mAudioFile = Cache.getAudioFile(this);
-        if (mAudioFile != null) {
-            try {
-                mAudioMixer.setFile(mAudioFile, true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -215,7 +168,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
             mMediaStreamingManager.notifyActivityOrientationChanged();
             updateOrientationBtnText();
             Toast.makeText(AVStreamingActivity.this, Config.HINT_ENCODING_ORIENTATION_CHANGED,
-                    Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_SHORT).show();
             Log.i(TAG, "EncodingOrientationSwitcher -");
         }
     }
@@ -243,6 +196,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
             final String fileName = "PLStreaming_" + System.currentTimeMillis() + ".jpg";
             mMediaStreamingManager.captureFrame(100, 100, new FrameCapturedCallback() {
                 private Bitmap bitmap;
+
                 @Override
                 public void onFrameCaptured(Bitmap bmp) {
                     if (bmp == null) {
@@ -337,7 +291,6 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
                 bos = new BufferedOutputStream(new FileOutputStream(file));
                 bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
                 bmp.recycle();
-                bmp = null;
             } finally {
                 if (bos != null) bos.close();
             }
@@ -352,41 +305,20 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         }
     }
 
-    /**
-     * Accept only 32 bit png (ARGB)
-     * @return
-     */
-    private WatermarkSetting buildWatermarkSetting() {
-        if (!mEncodingConfig.mIsWatermarkEnabled) {
-            return null;
-        }
-        WatermarkSetting watermarkSetting = new WatermarkSetting(this);
-        watermarkSetting.setResourceId(R.drawable.qiniu_logo);
-        watermarkSetting.setAlpha(mEncodingConfig.mWatermarkAlpha);
-        watermarkSetting.setSize(mEncodingConfig.mWatermarkSize);
-        if (mEncodingConfig.mIsWatermarkLocationPreset) {
-            watermarkSetting.setLocation(mEncodingConfig.mWatermarkLocationPreset);
-        } else {
-            watermarkSetting.setCustomPosition(mEncodingConfig.mWatermarkLocationCustomX, mEncodingConfig.mWatermarkLocationCustomY);
-        }
-
-        return watermarkSetting;
-    }
-
     private CameraStreamingSetting buildCameraStreamingSetting() {
         mCameraConfig = (CameraConfig) getIntent().getSerializableExtra("CameraConfig");
 
         CameraStreamingSetting cameraStreamingSetting = new CameraStreamingSetting();
         cameraStreamingSetting.setCameraId(mCameraConfig.mFrontFacing ? Camera.CameraInfo.CAMERA_FACING_FRONT : Camera.CameraInfo.CAMERA_FACING_BACK)
-                .setCameraPrvSizeLevel(mCameraConfig.mSizeLevel)
-                .setCameraPrvSizeRatio(mCameraConfig.mSizeRatio)
-                .setFocusMode(mCameraConfig.mFocusMode)
-                .setContinuousFocusModeEnabled(mCameraConfig.mContinuousAutoFocus)
-                .setFrontCameraPreviewMirror(mCameraConfig.mPreviewMirror)
-                .setFrontCameraMirror(mCameraConfig.mEncodingMirror).setRecordingHint(false)
-                .setResetTouchFocusDelayInMs(3000)
-                .setBuiltInFaceBeautyEnabled(!mCameraConfig.mIsCustomFaceBeauty)
-                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f));
+            .setCameraPrvSizeLevel(mCameraConfig.mSizeLevel)
+            .setCameraPrvSizeRatio(mCameraConfig.mSizeRatio)
+            .setFocusMode(mCameraConfig.mFocusMode)
+            .setContinuousFocusModeEnabled(mCameraConfig.mContinuousAutoFocus)
+            .setFrontCameraPreviewMirror(mCameraConfig.mPreviewMirror)
+            .setFrontCameraMirror(mCameraConfig.mEncodingMirror).setRecordingHint(false)
+            .setResetTouchFocusDelayInMs(3000)
+            .setBuiltInFaceBeautyEnabled(!mCameraConfig.mIsCustomFaceBeauty)
+            .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f));
 
         if (mCameraConfig.mIsFaceBeautyEnabled) {
             cameraStreamingSetting.setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
@@ -428,7 +360,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         mIsEncodingMirror = mCameraConfig.mEncodingMirror;
         mCurrentCamFacingIndex = mCameraConfig.mFrontFacing ? 1 : 0;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         } else {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -454,8 +386,8 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
             public void onClick(View v) {
                 mIsNeedFB = !mIsNeedFB;
                 mMediaStreamingManager.setVideoFilterType(mIsNeedFB ?
-                        CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY
-                        : CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_NONE);
+                    CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY
+                    : CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_NONE);
                 updateFBButtonText();
             }
         });
@@ -584,7 +516,6 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         });
 
         initButtonText();
-        initAudioMixerPanel();
     }
 
     private void initButtonText() {
@@ -594,142 +525,6 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         updateFBButtonText();
         updateMuteButtonText();
         updateOrientationBtnText();
-    }
-
-    private void initAudioMixerPanel() {
-        Button mixPanelBtn = (Button) findViewById(R.id.mix_panel_btn);
-        mixPanelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View panel = findViewById(R.id.mix_panel);
-                panel.setVisibility(panel.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        mMixProgress = (SeekBar) findViewById(R.id.mix_progress);
-        mMixProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (mAudioMixer != null) {
-                    mAudioMixer.seek(1.0f * seekBar.getProgress() / seekBar.getMax());
-                }
-            }
-        });
-
-        SeekBar mixVolume = (SeekBar) findViewById(R.id.mix_volume);
-        mixVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (mAudioMixer != null) {
-                    mAudioMixer.setVolume(1.0f, 1.0f * seekBar.getProgress() / seekBar.getMax());
-                }
-            }
-        });
-
-        Button mixFileBtn = (Button) findViewById(R.id.mix_file_btn);
-        mixFileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogProperties properties = new DialogProperties();
-                properties.selection_mode = DialogConfigs.SINGLE_MODE;
-                properties.selection_type = DialogConfigs.FILE_SELECT;
-                properties.root = new File(DialogConfigs.STORAGE_DIR);
-                properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
-                properties.extensions = new String[]{"mp3"};
-
-                FilePickerDialog dialog = new FilePickerDialog(AVStreamingActivity.this, properties);
-                dialog.setTitle("Select a File");
-                dialog.setDialogSelectionListener(new DialogSelectionListener() {
-                    @Override
-                    public void onSelectedFilePaths(String[] files) {
-                        String filePath = files[0];
-                        try {
-                            mAudioMixer.setFile(filePath, true);
-                            Cache.setAudioFile(AVStreamingActivity.this, filePath);
-                            Toast.makeText(AVStreamingActivity.this, "setup mix file " + filePath + " success. duration:" + mAudioMixer.getDuration(), Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(AVStreamingActivity.this, "setup mix file " + filePath + " failed !!!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        mMixToggleBtn = (Button) findViewById(R.id.mix_btn);
-        mMixToggleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAudioMixer != null) {
-                    String text;
-                    if (mAudioMixer.isRunning()) {
-                        boolean s = mAudioMixer.pause();
-                        text = s ? "mixing pause success" : "mixing pause failed !!!";
-                    } else {
-                        boolean s = mAudioMixer.play();
-                        text = s ? "mixing play success" : "mixing play failed !!!";
-                    }
-                    Toast.makeText(AVStreamingActivity.this, text, Toast.LENGTH_LONG).show();
-
-                    updateMixBtnText();
-                }
-            }
-        });
-
-        Button mixStopBtn = (Button) findViewById(R.id.mix_stop_btn);
-        mixStopBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAudioMixer != null) {
-                    boolean stopSuccess = mAudioMixer.stop();
-                    String text = stopSuccess ? "mixing stop success" : "mixing stop failed !!!";
-                    Toast.makeText(AVStreamingActivity.this, text, Toast.LENGTH_LONG).show();
-                    if (stopSuccess) {
-                        updateMixBtnText();
-                    }
-                }
-            }
-        });
-
-        Button playbackToggleBtn = (Button) findViewById(R.id.playback_btn);
-        playbackToggleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIsPlayingback) {
-                    mMediaStreamingManager.stopPlayback();
-                } else {
-                    mMediaStreamingManager.startPlayback();
-                }
-                mIsPlayingback = !mIsPlayingback;
-            }
-        });
-
-        updateMixBtnText();
-    }
-
-    private void updateMixBtnText() {
-        if (mAudioMixer != null && mAudioMixer.isRunning()) {
-            mMixToggleBtn.setText("Pause");
-        } else {
-            mMixToggleBtn.setText("Play");
-        }
     }
 
     @Override
@@ -753,7 +548,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
                 break;
             case CAMERA_SWITCHED:
                 if (extra != null) {
-                    Log.i(TAG, "current camera id:" + (Integer) extra);
+                    Log.i(TAG, "current camera id:" + extra);
                 }
                 Log.i(TAG, "camera switched");
                 final int currentCamId = (Integer) extra;
@@ -787,7 +582,7 @@ public class AVStreamingActivity extends StreamingBaseActivity implements
         if (mRotateLayout == null) {
             mRotateLayout = (RotateLayout) findViewById(R.id.focus_indicator_rotate_layout);
             mMediaStreamingManager.setFocusAreaIndicator(mRotateLayout,
-                    mRotateLayout.findViewById(R.id.focus_indicator));
+                mRotateLayout.findViewById(R.id.focus_indicator));
         }
     }
 

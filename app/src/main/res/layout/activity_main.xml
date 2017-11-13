@@ -33,7 +33,7 @@
 
             <EditText
                 android:id="@+id/input_url"
-                android:hint="You could paste publish URL here :)"
+                android:hint="请输入推流地址"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Stream input type:" />
+                    android:text="推流输入类型：" />
 
                 <Spinner
                     android:id="@+id/stream_input_types"

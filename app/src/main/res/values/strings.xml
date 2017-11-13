@@ -1,26 +1,26 @@
 <resources>
-    <string name="app_name">PLDroidMediaStreamingDemo</string>
+    <string name="app_name">媒体流演示</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="start">Start</string>
+    <string name="action_settings">设置</string>
+    <string name="start">开始</string>
 
-    <string name="hw_codec_camera_streaming_txt">HW Codec Camera Streaming</string>
-    <string name="sw_codec_camera_streaming_txt">SW Codec Camera Streaming</string>
-    <string name="pure_audio_streaming_txt">Audio Streaming</string>
-    <string name="screen_recorder_streaming_txt">Screen Recorder Streaming</string>
-    <string name="ext_cap_streaming_txt">Ext Capture Streaming</string>
+    <string name="hw_codec_camera_streaming_txt">硬解码</string>
+    <string name="sw_codec_camera_streaming_txt">软解码</string>
+    <string name="pure_audio_streaming_txt">音频流</string>
+    <string name="screen_recorder_streaming_txt">屏幕录像机流</string>
+    <string name="ext_cap_streaming_txt">Ext捕捉流</string>
 
-    <string name="string_state_ready">READY</string>
-    <string name="string_state_preparing">PREPARING</string>
-    <string name="string_state_connecting">CONNECTING</string>
-    <string name="string_state_streaming">STREAMING</string>
-    <string name="string_state_netblocking">NETBLOCKING, STOPPING</string>
-    <string name="string_state_con_timeout">CONNECTION TIMEOUT</string>
-    <string name="title_activity_audio_streaming">AudioStreamingActivity</string>
+    <string name="string_state_ready">准备好了</string>
+    <string name="string_state_preparing">准备</string>
+    <string name="string_state_connecting">连接</string>
+    <string name="string_state_streaming">推流</string>
+    <string name="string_state_netblocking">本地网络中断</string>
+    <string name="string_state_con_timeout">连接超时</string>
+    <string name="title_activity_audio_streaming">音频流媒体</string>
 
-    <string name="flash_light_on">ON</string>
-    <string name="flash_light_off">OFF</string>
+    <string name="flash_light_on">开</string>
+    <string name="flash_light_off">关</string>
 
     <string name="cd_et_input_url">cd_et_input_url</string>
     <string name="cd_btn_hw_codec">cd_btn_hw_codec</string>

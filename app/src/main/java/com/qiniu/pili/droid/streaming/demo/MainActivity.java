@@ -36,11 +36,11 @@ import java.util.Arrays;
 public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
 
-    private static final String GENERATE_STREAM_TEXT_V1 = "Your app server url which get StreamJson";
-    private static final String GENERATE_STREAM_TEXT_V2 = "Your app server url which get PublishUrl";
+    private static final String GENERATE_STREAM_TEXT_V1 = "rtmp://pili-publish.xiangbojiubo.com/vcdn/805547?e=1510025964&token=buysOo-/In92etTxTHOORWVoI13pVX_wSED3r9Mp4:bwvufKiuRh_A9qsj9B1nB1HU2hU=";
+    private static final String GENERATE_STREAM_TEXT_V2 = "rtmp://pili-publish.xiangbojiubo.com/vcdn/805547?e=1510026185&token=buysOo-/In92etTxTHOORWVoI13pVX_wSED3r9Mp4:CP9QDEiRyVTodOwaDan4pm9u_R0=";
 
-    private static final String[] INPUT_TYPES = { "Authorized", "Unauthorized", "JSON" };
-    private static final String[] STREAM_TYPES = { "Video-Audio", "Audio", "Import", "Screen" };
+    private static final String[] INPUT_TYPES = { "经授权的", "未经授权的", "JSON" };
+    private static final String[] STREAM_TYPES = { "视频音频", "音频", "进入", "屏幕" };
     private static final Class[] ACTIVITY_CLASSES = {
             AVStreamingActivity.class,
             AudioStreamingActivity.class,
@@ -171,7 +171,8 @@ public class MainActivity extends FragmentActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String publishUrl = genPublishURL();
+                // String publishUrl = genPublishURL();
+                String publishUrl = GENERATE_STREAM_TEXT_V2;
                 if (publishUrl != null) {
                     Cache.saveURL(MainActivity.this, publishUrl);
                     updateInputTextView(publishUrl);

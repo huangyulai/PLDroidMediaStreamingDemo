@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="gone">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="visible">
 
     <RadioGroup
         android:id="@+id/facing_group"
@@ -14,20 +14,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Facing:" />
+            android:text="初始化相机:"/>
 
         <RadioButton
             android:id="@+id/facing_front"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Front" />
+            android:text="前置"/>
 
         <RadioButton
             android:id="@+id/facing_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="后置"/>
 
     </RadioGroup>
 
@@ -38,24 +38,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Size:" />
+            android:text="Size:"/>
 
         <Spinner
             android:id="@+id/preview_size_level_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ratio:" />
+            android:text="Ratio:"/>
 
         <Spinner
             android:id="@+id/preview_size_ratio_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -65,13 +65,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Focus mode:" />
+            android:text="对焦模式:"/>
 
         <Spinner
             android:id="@+id/focus_mode_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -83,21 +83,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Beauty" />
+            android:text="Beauty"/>
 
         <CheckBox
             android:id="@+id/external_face_beauty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:text="CustomBeauty" />
+            android:text="CustomBeauty"/>
 
         <CheckBox
             android:id="@+id/continuous_auto_focus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="AutoFocus" />
+            android:text="自动对焦"/>
     </LinearLayout>
 
     <LinearLayout
@@ -107,19 +107,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Front camera mirror:" />
+            android:text="前置摄像头的镜像:"/>
 
         <CheckBox
             android:id="@+id/preview_mirror"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preview" />
+            android:text="预览"/>
 
         <CheckBox
             android:id="@+id/encoding_mirror"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Encoding" />
+            android:text="编码"/>
     </LinearLayout>
 
 </LinearLayout>

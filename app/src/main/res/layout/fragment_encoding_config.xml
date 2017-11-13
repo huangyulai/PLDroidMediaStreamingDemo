@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RadioGroup
         android:id="@+id/encoding_radio_group"
@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Encoding type:" />
+            android:text="编码类型:" />
 
         <RadioButton
             android:id="@+id/encoding_sw"
@@ -51,20 +51,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Video quality config:" />
+                android:text="视频质量配置:" />
 
             <RadioButton
                 android:id="@+id/video_quality_preset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Preset" />
+                android:text="预设" />
 
             <RadioButton
                 android:id="@+id/video_quality_custom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Custom" />
+                android:text="自定义" />
         </RadioGroup>
 
         <RelativeLayout
@@ -129,20 +129,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Video size config:" />
+                android:text="视频尺寸配置:" />
 
             <RadioButton
                 android:id="@+id/video_size_preset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Preset" />
+                android:text="预设" />
 
             <RadioButton
                 android:id="@+id/video_size_custom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Custom" />
+                android:text="自定义" />
         </RadioGroup>
 
         <RelativeLayout
@@ -202,13 +202,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Portrait" />
+                android:text="竖屏" />
 
             <RadioButton
                 android:id="@+id/orientation_landscape"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Landscape" />
+                android:text="横屏" />
         </RadioGroup>
 
         <RadioGroup
@@ -220,20 +220,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rate control:" />
+                android:text="速率控制:" />
 
             <RadioButton
                 android:id="@+id/rate_control_quality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Quality" />
+                android:text="质量优先" />
 
             <RadioButton
                 android:id="@+id/rate_control_bitrate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bitrate" />
+                android:text="字节优先" />
         </RadioGroup>
 
         <RadioGroup
@@ -245,26 +245,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bitrate control:" />
+                android:text="码率控制:" />
 
             <RadioButton
                 android:id="@+id/bitrate_auto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Auto" />
+                android:text="超清" />
 
             <RadioButton
                 android:id="@+id/bitrate_manual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manual" />
+                android:text="高清" />
 
             <RadioButton
                 android:id="@+id/bitrate_disable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Disable" />
+                android:text="标清" />
         </RadioGroup>
 
         <LinearLayout
@@ -276,7 +276,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Adaptive bitrate range:" />
+                android:text="自适应比特率范围:" />
 
             <EditText
                 android:id="@+id/auto_bitrate_min"
@@ -312,14 +312,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="FPS Control" />
+                android:text="FPS控制" />
 
             <CheckBox
                 android:id="@+id/watermark_control"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="watermark" />
+                android:text="是否显示LOGO" />
         </LinearLayout>
 
         <LinearLayout
@@ -335,7 +335,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Watermark alpha:" />
+                    android:text="水印透明度:" />
 
                 <EditText
                     android:id="@+id/watermark_alpha"
@@ -347,7 +347,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Watermark size:" />
+                    android:text="水印大小:" />
 
                 <Spinner
                     android:id="@+id/watermark_size_presets"
@@ -364,20 +364,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Watermark location config:" />
+                    android:text="水印位置:" />
 
                 <RadioButton
                     android:id="@+id/watermark_location_preset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Preset" />
+                    android:text="预设" />
 
                 <RadioButton
                     android:id="@+id/watermark_location_custom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Custom" />
+                    android:text="自定义" />
             </RadioGroup>
 
             <Spinner
@@ -426,7 +426,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="picture streaming" />
+                android:text="照片流" />
 
             <ImageView
                 android:id="@+id/picture_preview"
@@ -447,20 +447,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Audio quality config:" />
+            android:text="音频质量配置:" />
 
         <RadioButton
             android:id="@+id/audio_quality_preset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Preset" />
+            android:text="预设" />
 
         <RadioButton
             android:id="@+id/audio_quality_custom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Custom" />
+            android:text="自定义" />
     </RadioGroup>
 
     <RelativeLayout
